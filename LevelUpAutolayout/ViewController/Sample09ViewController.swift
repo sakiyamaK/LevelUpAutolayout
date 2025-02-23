@@ -1,21 +1,24 @@
 /*
- Sample07ViewControllerと同じく
-
- https://zenn.dev/sakiyamak/books/1cc7cffd69b476a81984/viewer/02_twitter_01#uicollectionview%E3%82%92%E7%94%A8%E6%84%8F%E3%81%99%E3%82%8B
- までだが、コードが煩雑になってきたのでGuide部分を別クラスに分ける
- */
+ https://zenn.dev/sakiyamak/books/1cc7cffd69b476a81984/viewer/03_twitter_02#headermainmarginview%E3%82%92%E7%94%A8%E6%84%8F%E3%81%99%E3%82%8B
+ まで
+ */
 
 import UIKit
 
-class Sample08ViewController: UIViewController {
+class Sample09ViewController: UIViewController {
 
-    // guideたちをGuideViewにする
     private let guideView: GuideView = .make()
 
     private let mainScrollView: UIScrollView = .make(backgroundColor: .systemBackground)
     private let mainStackView: UIStackView = .make(axis: .vertical)
 
-    private let headerStackView: UIStackView = .make(axis: .vertical, backgroundColor: .systemYellow)
+    private let headerStackView: UIStackView = .make(axis: .vertical)
+    // header部分に新しいguideを用意
+    private let headerGuideImageView: UIView = .make(backgroundColor: .systemGray3)
+    // headerも複雑なので別クラスで用意
+    private let haderView: Header01View = .make(delegate: .init(tapEditButton: {
+        print("編集ボタンを押したよ")
+    }))
 
     private let pageScrollView: UIScrollView = UIScrollView.make(
         isPagingEnabled: true,
@@ -23,15 +26,14 @@ class Sample08ViewController: UIViewController {
     )
     private let pageStackView: UIStackView = .make(axis: .horizontal)
 
-    private let collectionViews: [UICollectionView] = [UIColor.systemTeal, UIColor.systemOrange, UIColor.systemPink, UIColor.systemBrown].compactMap({ color in
-
-            let layout = UICollectionViewCompositionalLayout.list(using: .init(appearance: .plain))
-
-            let view = UICollectionView(frame: .zero, collectionViewLayout: layout )
-            view.translatesAutoresizingMaskIntoConstraints = false
-            view.backgroundColor = color
-            return view
+    private let collectionViews: [UICollectionView] = {
+        [UIColor.systemTeal, UIColor.systemOrange, UIColor.systemPink, UIColor.systemBrown].compactMap({ color in
+                .make(
+                    layout: UICollectionViewCompositionalLayout.list(using: .init(appearance: .plain)),
+                    backgroundColor: color
+                )
         })
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,7 +43,7 @@ class Sample08ViewController: UIViewController {
     }
 }
 
-private extension Sample08ViewController {
+private extension Sample09ViewController {
     func setupUI() {
 
         self.view.addSubview(guideView)
@@ -53,6 +55,10 @@ private extension Sample08ViewController {
         mainScrollView.fillContentLayoutGuide(subView: mainStackView)
 
         mainStackView.addArrangedSubview(headerStackView)
+
+        //ヘッダの構造を別メソッドで用意
+        setupHeaderView()
+
         mainStackView.addArrangedSubview(pageScrollView)
 
         pageScrollView.addSubview(pageStackView)
@@ -63,15 +69,17 @@ private extension Sample08ViewController {
         }
     }
 
+    func setupHeaderView() {
+        headerStackView.addArrangedSubview(headerGuideImageView)
+        headerStackView.addArrangedSubview(haderView)
+    }
+
     func seutpConstraint() {
 
         NSLayoutConstraint.activate(
             [
                 mainStackView.widthAnchor.constraint(
                     equalTo: mainScrollView.frameLayoutGuide.widthAnchor
-                ),
-                headerStackView.heightAnchor.constraint(
-                    equalToConstant: 300
                 ),
                 pageScrollView.heightAnchor.constraint(
                     equalTo: guideView.collectionView.heightAnchor
@@ -86,12 +94,15 @@ private extension Sample08ViewController {
                         equalTo: pageScrollView.heightAnchor
                     )
                 ]
-            }).flatMap({ $0 })
+            }).flatMap({ $0 }) + [
+                // ヘッダのガイドの高さを決める
+                headerGuideImageView.heightAnchor.constraint(equalToConstant: 180)
+            ]
         )
     }
 }
 
 import SwiftUI
 #Preview {
-    Sample08ViewController()
+    Sample09ViewController()
 }

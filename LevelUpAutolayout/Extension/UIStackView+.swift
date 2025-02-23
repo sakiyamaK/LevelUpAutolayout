@@ -9,10 +9,12 @@ import UIKit
 
 extension UIStackView {
     // Selfとすることで継承したクラスで呼ぶとそのクラスとして呼ばれる
-    static func makeStack() -> Self {
+    static func make(axis: NSLayoutConstraint.Axis, backgroundColor: UIColor? = nil) -> Self {
         let view = self.init()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.axis = .vertical
+        view.axis = axis
+        view.backgroundColor = backgroundColor
         return view
     }
+
 }

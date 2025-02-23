@@ -49,7 +49,44 @@ private extension CopyViewController {
     }
 }
 
+class VC: UIViewController {
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = .systemBackground
+
+        let stackView = UIStackView()
+        stackView.backgroundColor = .yellow
+        stackView.layoutMargins = .init(top: 30, left: 30, bottom: 30, right: 30)
+        stackView.isLayoutMarginsRelativeArrangement = true
+        stackView.axis = .vertical
+        stackView.spacing = 8
+        stackView.distribution = .fillEqually
+
+        let view1 = UIView()
+        view1.backgroundColor = .red
+
+        let view2 = UIView()
+        view2.backgroundColor = .blue
+
+        stackView.addArrangedSubview(view1)
+        stackView.addArrangedSubview(view2)
+
+        view.addSubview(stackView)
+
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            stackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            stackView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            stackView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            stackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+        ])
+
+
+
+    }
+}
+
 import SwiftUI
 #Preview {
-    CopyViewController()
+    VC()
 }

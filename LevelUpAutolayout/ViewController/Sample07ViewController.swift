@@ -1,67 +1,44 @@
-//
-//  Sample07ViewController.swift
-//  LevelUpAutolayout
-//
-//  Created by sakiyamaK on 2025/02/11.
-//
+/*
+ https://zenn.dev/sakiyamak/books/1cc7cffd69b476a81984/viewer/02_twitter_01#uicollectionview%E3%82%92%E7%94%A8%E6%84%8F%E3%81%99%E3%82%8B
+ まで
+ */
 
 
 import UIKit
 
 class Sample07ViewController: UIViewController {
 
-    private let guideStackView: UIStackView = .makeStack()
-
-    private let guideHeaderImageView: UIImageView = .make(backgroundColor: .systemBlue)
-
+    private let guideStackView: UIStackView = .make(axis: .vertical)
+    private let guideHeaderImageView: UIView = .make(backgroundColor: .systemBlue)
     private let guideTabView: UIView = .make(backgroundColor: .systemGreen)
-
-    private let guideCollectionView: UICollectionView = {
-        let layout = UICollectionViewCompositionalLayout.list(using: .init(appearance: .plain))
-        let view = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .systemRed
-        return view
-    }()
+    private let guideCollectionView: UIView = .make(backgroundColor: .systemRed)
 
     private let mainScrollView: UIScrollView = .make(backgroundColor: .systemBackground)
+    private let mainStackView: UIStackView = .make(axis: .vertical)
 
-    private let mainStackView: UIStackView = .makeStack()
+    private let headerStackView: UIStackView = .make(axis: .vertical, backgroundColor: .systemYellow)
+    private let pageScrollView: UIScrollView = UIScrollView.make(
+        isPagingEnabled: true,
+        backgroundColor: .systemRed
+    )
+    private let pageStackView: UIStackView = .make(axis: .horizontal)
 
-    private let headerStackView: UIStackView = {
-        let view = UIStackView.makeStack()
-        view.backgroundColor = .systemYellow
-        return view
-    }()
+    // 背景色にする色の数だけcollectionViewを用意する
+    private let collectionViews: [UICollectionView] = [UIColor.systemTeal, UIColor.systemOrange, UIColor.systemPink, UIColor.systemBrown].compactMap({ color in
 
-    private let pageScrollView: UIScrollView = {
-        let view = UIScrollView.make(backgroundColor: .systemRed)
-        view.isPagingEnabled = true
-        return view
-    }()
-
-    private let pageStackView: UIStackView = {
-        let view = UIStackView.makeStack()
-        view.axis = .horizontal
-        return view
-    }()
-
-    private let collectionViews: [UICollectionView] = {
-        // 背景色にする色の数だけcollectionViewを用意する
-        [UIColor.systemTeal, UIColor.systemOrange, UIColor.systemPink, UIColor.systemBrown].compactMap({ color in
             let layout = UICollectionViewCompositionalLayout.list(using: .init(appearance: .plain))
-            let view = UICollectionView(frame: .zero, collectionViewLayout: layout)
+
+            let view = UICollectionView(frame: .zero, collectionViewLayout: layout )
             view.translatesAutoresizingMaskIntoConstraints = false
             view.backgroundColor = color
             return view
         })
-    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
         setupGuideUI()
-        setupGUideConstraint()
+        setupGuideConstraint()
         setupUI()
         seutpConstraint()
     }
@@ -70,23 +47,15 @@ class Sample07ViewController: UIViewController {
 private extension Sample07ViewController {
     func setupGuideUI() {
         self.view.addSubview(guideStackView)
-        // viewのsafeAreaとsubViewの四隅を揃える
         self.view.fillSafeArea(subView: guideStackView)
 
-        // stackviewに各viewを並べる
         guideStackView.addArrangedSubview(guideHeaderImageView)
         guideStackView.addArrangedSubview(guideTabView)
         guideStackView.addArrangedSubview(guideCollectionView)
     }
 
-    func setupGUideConstraint() {
-        //guideHeaderImageViewとguideTabViewの高さを決める
-        /*
-         stackviewが画面全体の制約があるため
-         残った余白が高さの制約がないguideCollectionViewとなる
-         */
+    func setupGuideConstraint() {
         NSLayoutConstraint.activate([
-            // ヘッダの最小の高さになる
             guideHeaderImageView.heightAnchor.constraint(equalToConstant: 60),
             guideTabView.heightAnchor.constraint(equalToConstant: 80),
         ])
@@ -107,37 +76,34 @@ private extension Sample07ViewController {
         collectionViews.forEach {
             pageStackView.addArrangedSubview($0)
         }
+
     }
 
     func seutpConstraint() {
 
-        // 今はmainStackViewの高さを決める要素がないから仮でmainScrollView.frameLayoutGuideと同じ高さにしている
-        // mainStackViewの中で組まれるレイアウトの高さを優先したいため、この制約のpriorityは1にする
-        // priorityはなぜか初期化パラメータじゃないからめんどくさい..
-//      mainScrollView.frameLayoutGuide.heightAnchor)
-//      mainStackViewHeightConstraint.priority = .init(rawValue: 1)
-
         NSLayoutConstraint.activate(
             [
-                // mainStackViewの幅と高さをmainScrollViewのスクロール領域にする
                 mainStackView.widthAnchor.constraint(
                     equalTo: mainScrollView.frameLayoutGuide.widthAnchor
                 ),
-                //mainStackViewの高さは中の要素で決まるため、本来はこれはもういらない
-                mainStackView.heightAnchor.constraint(
-                    equalTo: mainScrollView.frameLayoutGuide.heightAnchor
-                ).priority(.init(rawValue: 1)),
+//                mainStackView.heightAnchor.constraint(
+//                    equalTo: mainScrollView.frameLayoutGuide.heightAnchor
+//                ).priority(.init(rawValue: 1)),
 
-                // ヘッダの最大の高さを決める
                 headerStackView.heightAnchor.constraint(
                     equalToConstant: 300
                 ),
-
-                // 縦にスクロールしてヘッダが縮んだ後のcollectionViewの高さ = guideCollectionViewの高さ
+//                pageStackView.widthAnchor.constraint(
+//                    equalTo: pageScrollView.frameLayoutGuide.widthAnchor,
+//                    multiplier: 4
+//                ).priority(
+//                    .init(rawValue: 1)
+//                ),
                 pageScrollView.heightAnchor.constraint(
                     equalTo: guideCollectionView.heightAnchor
                 )
             ] +
+            // collectionViewの配列に対してひとつずつ制約を貼って一次元配列にする
             collectionViews.compactMap({ collectionView in
                 [
                     collectionView.widthAnchor.constraint(
@@ -155,8 +121,4 @@ private extension Sample07ViewController {
 import SwiftUI
 #Preview {
     Sample07ViewController()
-}
-
-#Preview {
-    Sample04ViewController()
 }

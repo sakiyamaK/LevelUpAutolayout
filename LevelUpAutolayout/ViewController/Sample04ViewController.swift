@@ -1,9 +1,7 @@
-//
-//  Sample04ViewController.swift
-//  LevelUpAutolayout
-//
-//  Created by sakiyamaK on 2025/02/11.
-//
+/*
+ https://zenn.dev/sakiyamak/books/1cc7cffd69b476a81984/viewer/01_kangaekata_02#greenview%E3%81%8Cblueview%E3%81%AE%E4%BD%8D%E7%BD%AE%E3%81%A7%E6%AD%A2%E3%81%BE%E3%82%8B%E3%82%88%E3%81%86%E3%81%AB%E3%81%99%E3%82%8B
+ まで
+ */
 
 import UIKit
 
@@ -20,24 +18,16 @@ class Sample04ViewController: UIViewController {
         view.axis = .vertical
         return view
     }()
-
-    private let guideHeaderImageView: UIImageView = .make(backgroundColor: .systemBlue)
-
+    // あくまで位置や高さを知るために貼っているだけだから実務では色はつけなくていいよ
+    private let guideHeaderImageView: UIView = .make(backgroundColor: .systemBlue)
     private let guideTabView: UIView = .make(backgroundColor: .systemGreen)
-
-    private let guideCollectionView: UICollectionView = {
-        let layout = UICollectionViewCompositionalLayout.list(using: .init(appearance: .plain))
-        let view = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .systemRed
-        return view
-    }()
+    private let guideCollectionView: UIView = .make(backgroundColor: .systemRed)
 
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
         setupGuideUI()
-        setupGUideConstraint()
+        setupGuideConstraint()
     }
 }
 
@@ -53,7 +43,7 @@ private extension Sample04ViewController {
         guideStackView.addArrangedSubview(guideCollectionView)
     }
 
-    func setupGUideConstraint() {
+    func setupGuideConstraint() {
         //guideHeaderImageViewとguideTabViewの高さを決める
         /*
          stackviewが画面全体の制約があるため

@@ -1,4 +1,9 @@
 
+/*
+ https://zenn.dev/sakiyamak/books/1cc7cffd69b476a81984/viewer/01_kangaekata_01#redview%E3%82%92%E7%94%A8%E6%84%8F%E3%81%99%E3%82%8B
+ まで
+ */
+
 import UIKit
 
 class Sample01ViewController: UIViewController {
@@ -32,13 +37,25 @@ class Sample01ViewController: UIViewController {
 
 private extension Sample01ViewController {
     func setupScrollView() {
+
         self.view.addSubview(scrollView)
         // viewのsafeAreaとsubViewの四隅を揃える
-        self.view.fillSafeArea(subView: scrollView)
+        NSLayoutConstraint.activate([
+            scrollView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor)
+        ])
+
 
         scrollView.addSubview(contentsView)
         // scrollViewのContentlayoutGuideとsubViewの四隅を揃える
-        scrollView.fillContentLayoutGuide(subView: contentsView)
+        NSLayoutConstraint.activate([
+            contentsView.topAnchor.constraint(equalTo: self.scrollView.contentLayoutGuide.topAnchor),
+            contentsView.bottomAnchor.constraint(equalTo: self.scrollView.contentLayoutGuide.bottomAnchor),
+            contentsView.leadingAnchor.constraint(equalTo: self.scrollView.contentLayoutGuide.leadingAnchor),
+            contentsView.trailingAnchor.constraint(equalTo: self.scrollView.contentLayoutGuide.trailingAnchor)
+        ])
 
         // contentsViewの横幅をScrollViewのframeLayoutGuideの横幅に合わせる
         // contentsViewの高さをScrollViewのframeLayoutGuideの高さの2倍にする

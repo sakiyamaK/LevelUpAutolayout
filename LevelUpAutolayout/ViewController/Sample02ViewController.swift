@@ -1,20 +1,13 @@
-//
-//  Sample02ViewController.swift
-//  LevelUpAutolayout
-//
-//  Created by sakiyamaK on 2025/02/11.
-//
-
+/*
+ https://zenn.dev/sakiyamak/books/1cc7cffd69b476a81984/viewer/01_kangaekata_01#blueview%E3%82%92%E7%94%A8%E6%84%8F%E3%81%99%E3%82%8B
+ まで
+ */
 
 import UIKit
 
 class Sample02ViewController: UIViewController {
 
-    private let scrollView = {
-        let scrollView = UIScrollView()
-        scrollView.translatesAutoresizingMaskIntoConstraints = false
-        return scrollView
-    }()
+    private let scrollView = UIScrollView.make()
 
     private let contentsView = UIView.make()
 
